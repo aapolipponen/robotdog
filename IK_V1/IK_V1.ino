@@ -2,10 +2,11 @@
 #include <Wire.h>
 #include <math.h>
 
-
-Servo A1, B1
-
 #define PI 3.14159265
+
+const float pi = M_PI;  //Store pi in a less annoying format
+
+Servo myservo1, myservo2;
 
 float B1_Lenght = 150;
 float B2_Lenght = 150;
@@ -17,10 +18,12 @@ float B1_Angle = 45;
 const float a = B1_Lenght * 0.1;      // lower joint length converted from mm to cm
 const float b = B2_Lenght * 0.1;      // upper joint length converted from mm to cm
 
+//TODO: Fix the numbers
 // Correction factors to align servo values with their respective axis
 const float S_1_CorrectionFactor = -10;     // Align arm "a" with the horizontal when at 0 degrees
 const float S_2_CorrectionFactor = -77;     // Align arm "b" with arm "a" when at 0 degrees
 
+//TODO: Fix the numbers
 // Correction factor to shift origin out to edge of the mount
 const float X_CorrectionFactor = 6.5;       // X direction correction factor (cm)
 const float Y_CorrectionFactor = -4;       // Y direction correction factor (cm)
@@ -32,27 +35,26 @@ float theta;        //Angle formed between line from origin to (x,y) and the hor
 
 float x;            // x position (cm)
 float y;            // y position (cm)
-float c;            // Hypotenuse legngth in cm
-
-const float pi = M_PI;  //Store pi in a less annoying format
+float c;            // Hypotenuse length in cm
 
 
 
 void setup() {
-  A1.attach(1);         //A1 Servo
-  B1.attach(0);         //B1 Servo
+  myservo1.attach(1);         //A1 Servo
+  myservo2.attach(0);         //B1 Servo
   Serial.begin(9600);             //For debugging
   Serial.println("Initializing Servos...");
-  ResetServos();
+  //servo_base();
+  servo_center();
 }
-
-
 
 void loop() {
   FixCoordinates(10, 10);           // Enter coordinates of point.
   inverseKinematics();         // Calculate angles of servos
-  ServoMovement();                        //Move servos
-  delay(30);
+  printvalues();
+  //ServoMovement();                        //Move servos
+  delay(1000); // wait for one second before printing again
+  //delay(30);
 }
 
 // Get x and y measured from the bottom of the base. Function corrects for offset
@@ -72,10 +74,30 @@ void inverseKinematics() {
   A1_Angle = C + S_2_CorrectionFactor;                            // Find neceesary angle. Add Correction
 }
 
+void printvalues() {
+//  Serial.println(A);
+//  Serial.println(B);
+//  Serial.println(C);
+//  Serial.println(theta);
+  Serial.println(A1_Angle);
+  Serial.println(B1_Angle);
+}
+
+void servo_center() {
+  myservo1.write(90);
+  myservo2.write(90);
+}
+
+
+void servo_base() {
+  myservo1.write(0);
+  myservo2.write(0);
+}
+
 // Update / move the servos
 void ServoMovement() {
-  A1.write(A1_Angle);
-  B1.write(B1_Angle);
+  myservo1.write(A1_Angle);
+  myservo2.write(B1_Angle);
 }
 
 
