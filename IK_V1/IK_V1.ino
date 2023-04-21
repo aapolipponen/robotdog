@@ -1,4 +1,4 @@
-#include <Servo.h>
+//#include <Servo.h>
 #include <Wire.h>
 #include <math.h>
 
@@ -99,6 +99,23 @@ void ServoMovement() {
   myservo1.write(A1_Angle);
   myservo2.write(B1_Angle);
 }
+
+//void servo_center() {
+  //A1.write(90);
+  //B1.write(90);
+//}
+
+
+//void servo_base() {
+  //A1.write(0);
+  //B1.write(90);
+//}
+
+// Update / move the servos
+//void ServoMovement() {
+  //A1.write(A1_Angle);
+  //B1.write(B1_Angle);
+//}
 
 
 
